@@ -1,40 +1,53 @@
 import turtle as trtl
 
+# create an empty list of turtles
+my_turtles = []
+
+# use interesting shapes and colors
+turtle_shapes = ["arrow", "turtle", "circle", "square", "triangle", "classic"]
+turtle_colors = ["red", "blue", "green", "orange", "purple", "gold"]
+
 class TurtleCircle:
-    def __init__(self, shapes, colors, start_x=0, start_y=0):
-        self.shapes = shapes
-        self.colors = colors
-        self.start_x = start_x
-        self.start_y = start_y
-        self.my_turtles = []
-        self.current_direction = 0
-        self.starting_length = 25
-        self.length_increment = 45
-        self.create_turtles()
+    def __init__(self, shape, color):
+        self.turtle = trtl.Turtle(shape=shape)
+        self.turtle.penup()
+        self.turtle.color(color)
+        self.turtle.pensize(2)
 
-    def create_turtles(self):
-        for shape in self.shapes:
-            t = trtl.Turtle(shape=shape)
-            t.color(self.colors.pop(0))  # Change the color for each shape
-            t.goto(self.start_x, self.start_y)
-            t.setheading(self.current_direction)
-            t.forward(self.starting_length)
-
-            # Update position and direction for the next turtle
-            self.start_x += 50
-            self.start_y += 50
-            self.current_direction += 30
+    def move_and_draw(self, startx, starty, startDir, forwardLength):
+        self.turtle.goto(startx, starty)
+        self.turtle.pendown()
+        self.turtle.setheading(startDir)
+        self.turtle.forward(forwardLength)
+        self.turtle.right(45)  # Turn right to form the next side of the octagon
 
 def main():
-    turtle_shapes = ["arrow", "turtle", "circle", "square", "triangle", "classic"]
-    turtle_colors = ["red", "blue", "green", "orange", "purple", "gold"]
+    startx = 0
+    starty = 0
+    startDir = 0
+    forwardLength = 100
 
-    # Create a TurtleCircle instance
-    turtle_circle = TurtleCircle(turtle_shapes, turtle_colors)
+    for i in range(6):  # Loop to create 8 sides of the octagon
+        shape = turtle_shapes[i % len(turtle_shapes)]
+        color = turtle_colors[i % len(turtle_colors)]
+        turtle_obj = TurtleCircle(shape, color)
+        turtle_obj.move_and_draw(startx, starty, startDir, forwardLength)
+        startx = turtle_obj.turtle.xcor()
+        starty = turtle_obj.turtle.ycor()
+        startDir += 45  # Increment the direction to form the next side of the octagon
 
-    # Create the screen
     wn = trtl.Screen()
     wn.mainloop()
+
+# Create a turtle object 
+t = trtl.Turtle()
+
+# Function to get coordinates on click
+def get_coordinates(x, y):
+    print(f"You clicked at ({x}, {y})")
+
+# Capture click events to get coordinates
+trtl.onscreenclick(get_coordinates)
 
 if __name__ == "__main__":
     main()
